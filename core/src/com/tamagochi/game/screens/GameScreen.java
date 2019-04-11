@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.tamagochi.game.Logic;
 import com.tamagochi.game.TamagochiActor;
 import com.tamagochi.game.utils.Constants;
 
@@ -20,12 +21,14 @@ public class GameScreen implements Screen {
     Texture backgroundTexture;
     Music backgroundMusic;
     TamagochiActor TamagochiActor;
+    Logic logic;
 
 
     private OrthographicCamera camera;
 
     public GameScreen(Game TamagochiGame){
         this.game = TamagochiGame;
+        logic = new Logic();
         stage = new Stage(new ScreenViewport());
         backgroundTexture = new Texture(Gdx.files.internal("BackgroundHouse.jpg"));
         Image background = new Image(backgroundTexture);
@@ -46,6 +49,7 @@ public class GameScreen implements Screen {
     }
 
     public void show() {
+
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -53,6 +57,8 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        logic.Cycle();
 
         camera.update();
         stage.act(Gdx.graphics.getDeltaTime());
