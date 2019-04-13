@@ -65,7 +65,6 @@ public class Hud extends Group implements Disposable {
     @Override
     public void act(float delta) {
         super.act(delta);
-        Gdx.input.setInputProcessor(stage);
         printNeeds();
         stage.act();
     }

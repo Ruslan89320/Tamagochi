@@ -2,6 +2,7 @@ package com.tamagochi.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,14 +19,15 @@ import com.tamagochi.game.utils.Constants;
 
 public class GameScreen implements Screen {
     private final Game game;
-    SpriteBatch batch;
+    private SpriteBatch batch;
     private Stage stage;
-    Texture backgroundTexture;
+    private Texture backgroundTexture;
     Music backgroundMusic;
     TamagochiActor TamagochiActor;
     Logic logic;
     private Hud hud;
-
+    private OrthographicCamera camera;
+    private InputMultiplexer multiplexer;
 
 
     public GameScreen(Game TamagochiGame){
@@ -49,6 +51,10 @@ public class GameScreen implements Screen {
         stage.addActor(background);
 
 
+        camera = (OrthographicCamera) stage.getViewport().getCamera();
+        camera.setToOrtho(false,Constants.WIDTH,Constants.HEIGHT);
+
+
         TamagochiActor = new TamagochiActor();
         stage.addActor(TamagochiActor);
 
@@ -60,7 +66,10 @@ public class GameScreen implements Screen {
     }
 
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(hud.stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
@@ -69,9 +78,13 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
+        camera.update();
+
         stage.act(Gdx.graphics.getDeltaTime());
         hud.act(Gdx.graphics.getDeltaTime());
+
         stage.draw();
+
         hud.draw(batch,1);
     }
 

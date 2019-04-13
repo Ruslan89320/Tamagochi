@@ -10,8 +10,6 @@ public class Logic {
     public static final int HUNGER_SICKFROMNOTEATING = 1000;
     public static final int HUNGER_DEADFROMNOTEATING = 0;
 
-    public static final int WASTE_EXPUNGE = 256;
-
     private int Age=0;
     private int Hunger=5000;
     private int Expunge=5000;
@@ -27,7 +25,19 @@ public class Logic {
         setThrist(getThrist()-1);
         setSleep(getSleep()-1);
         Age+=1;
-        if(getExpunge()>= WASTE_EXPUNGE) setHappiness(getHappiness()-8);
+        if(getExpunge()>= 1000) setHappiness(getHappiness()-5);
+        if(getHunger()>= 1000) setHappiness(getHappiness()-1);
+        if(getThrist()>= 1000) setHappiness(getHappiness()-1);
+    }
+
+    public boolean isDead(){
+        if((getHunger()==0) || (getThrist()==0) || (Age==AGE_DEATHFROMNATURALCAUSES)) return true;
+        else return false;
+    }
+
+    public boolean isSleep(){
+        if(getSleep()==0) return true;
+        else return false;
     }
 
     public void doSleep(int sleep){
