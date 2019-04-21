@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.tamagochi.game.GameManager;
 import com.tamagochi.game.Logic;
 import com.tamagochi.game.utils.Constants;
 
@@ -26,17 +27,22 @@ public class Hud extends Group implements Disposable {
     public Stage stage;
     private Viewport viewport;
     public Logic logic;
+    int a=0;
 
-    private Label hungercountLabel, happinescountLabel, sleepcountLabel, thristcountLabel, expungecountLabal;
-    Texture hungerbuttonTexture;
-    TextureRegion hungerbuttonTextureRegion;
-    TextureRegionDrawable hungerbuttonTextureRegionDrawable;
-    ImageButton HungerButton;
+    private Label hungercountLabel, happinesscountLabel, sleepcountLabel, thristcountLabel, expungecountLabel;
+    Texture hungerbuttonTexture,happinessbuttonTexture,sleepbuttonTexture, thristbuttonTexture,expungebuttonTexture;
+    TextureRegion hungerbuttonTextureRegion, happinessbuttonTextureRegion, thristbuttonTextureRegion,expungebuttonTextureRegion, sleepbuttonTextureRegion;
+    TextureRegionDrawable hungerbuttonTextureRegionDrawable,  happinessbuttonTextureRegionDrawable, thristbuttonTextureRegionDrawable,expungebuttonTextureRegionDrawable,sleepbuttonTextureRegionDrawable;
+    ImageButton HungerButton, HappinessButton,ThristButton, ExpungeButton,SleepButton;
 
     public Hud(SpriteBatch sb){
         viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
-        logic = new Logic();
+        logic = new Logic(GameManager.getInstance().gameData.getHunger(),GameManager.getInstance().gameData.getExpunge(),
+                GameManager.getInstance().gameData.getThist(), GameManager.getInstance().gameData.getSleep(),
+                GameManager.getInstance().gameData.getHappines(),GameManager.getInstance().gameData.getAge(),GameManager.getInstance().gameData.getDate());
+
+
 
         hungercountLabel = new Label(String.format("%03d", logic.getHunger()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         hungerbuttonTexture = new Texture(Gdx.files.internal("Buttons/HungerButton.png"));
@@ -45,33 +51,91 @@ public class Hud extends Group implements Disposable {
         HungerButton = new ImageButton(hungerbuttonTextureRegionDrawable);
         HungerButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                logic.doEat(2000);
+                logic.doEat(40);
             }
         });
+
+        thristcountLabel = new Label(String.format("%03d", logic.getThrist()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        thristbuttonTexture = new Texture(Gdx.files.internal("Buttons/ThristButton.png"));
+        thristbuttonTextureRegion = new TextureRegion(thristbuttonTexture);
+        thristbuttonTextureRegionDrawable = new TextureRegionDrawable(thristbuttonTextureRegion);
+        ThristButton = new ImageButton(thristbuttonTextureRegionDrawable);
+        ThristButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                logic.doDrink(40);
+            }
+        });
+
+        expungecountLabel = new Label(String.format("%03d", logic.getThrist()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        expungebuttonTexture = new Texture(Gdx.files.internal("Buttons/ExpungeButton.png"));
+        expungebuttonTextureRegion = new TextureRegion(expungebuttonTexture);
+        expungebuttonTextureRegionDrawable = new TextureRegionDrawable(expungebuttonTextureRegion);
+        ExpungeButton = new ImageButton(expungebuttonTextureRegionDrawable);
+        ExpungeButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                logic.doWaste();
+            }
+        });
+
+        sleepcountLabel = new Label(String.format("%03d", logic.getThrist()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        sleepbuttonTexture = new Texture(Gdx.files.internal("Buttons/SleepButton.png"));
+        sleepbuttonTextureRegion = new TextureRegion(sleepbuttonTexture);
+        sleepbuttonTextureRegionDrawable = new TextureRegionDrawable(sleepbuttonTextureRegion);
+        SleepButton = new ImageButton(sleepbuttonTextureRegionDrawable);
+        SleepButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                logic.doSleep(80);
+            }
+        });
+
+        happinesscountLabel = new Label(String.format("%03d", logic.getHappiness()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        happinessbuttonTexture = new Texture(Gdx.files.internal("Buttons/HappinessButton.png"));
+        happinessbuttonTextureRegion = new TextureRegion(happinessbuttonTexture);
+        happinessbuttonTextureRegionDrawable = new TextureRegionDrawable(happinessbuttonTextureRegion);
+        HappinessButton = new ImageButton(happinessbuttonTextureRegionDrawable);
 
         Table table = new Table();
         table.top();
         table.setFillParent(true);
 
+        table.add(HappinessButton).expandX().padTop(10);
+        table.add(SleepButton).expandX().padTop(10);
+        table.add(ThristButton).expandX().padTop(10);
         table.add(HungerButton).expandX().padTop(10);
+        table.add(ExpungeButton).expandX().padTop(10);
         table.row();
+        table.add(happinesscountLabel).expandX();
+        table.add(sleepcountLabel).expandX();
+        table.add(thristcountLabel).expandX();
         table.add(hungercountLabel).expandX();
+        table.add(expungecountLabel).expandX();
 
         stage.addActor(table);
     }
 
-    public void dispose() { stage.dispose(); }
+    public void dispose() {
+        GameManager.getInstance().saveData();
+        stage.dispose(); }
 
     @Override
     public void act(float delta) {
+        GameManager.getInstance().gameData.setAll(logic);
         super.act(delta);
         printNeeds();
         stage.act();
     }
 
     public void printNeeds(){
-        logic.Cycle();
+        a++;
+        if(a==1000) {
+            logic.Cycle();
+            a = 0;
+        }
         hungercountLabel.setText(String.format("%03d", logic.getHunger()));
+        thristcountLabel.setText(String.format("%03d", logic.getThrist()));
+        happinesscountLabel.setText(String.format("%03d", logic.getHappiness()));
+        expungecountLabel.setText(String.format("%03d", logic.getExpunge()));
+        sleepcountLabel.setText(String.format("%03d", logic.getSleep()));
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.tamagochi.game.screens.GameScreen;
 public class TamagochiGame extends Game {
 
 	public void create() {
+		GameManager.getInstance().initializeGameData();
 		setScreen(new GameScreen(this));
 	}
 
@@ -14,6 +15,7 @@ public class TamagochiGame extends Game {
 	}
 
 	public void dispose() {
+		GameManager.getInstance().saveData();
 		super.dispose();
 	}
 }

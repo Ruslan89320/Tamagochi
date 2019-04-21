@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.tamagochi.game.GameManager;
 import com.tamagochi.game.Logic;
 import com.tamagochi.game.TamagochiActor;
 import com.tamagochi.game.utils.Constants;
@@ -24,7 +25,6 @@ public class GameScreen implements Screen {
     private Texture backgroundTexture;
     Music backgroundMusic;
     TamagochiActor TamagochiActor;
-    Logic logic;
     private Hud hud;
     private OrthographicCamera camera;
     private InputMultiplexer multiplexer;
@@ -33,13 +33,8 @@ public class GameScreen implements Screen {
     public GameScreen(Game TamagochiGame){
         this.game = TamagochiGame;
 
-
         batch = new SpriteBatch();
         hud= new Hud(batch);
-
-
-        logic = new Logic();
-
 
         stage = new Stage(new ScreenViewport());
 
@@ -77,7 +72,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         camera.update();
 
         stage.act(Gdx.graphics.getDeltaTime());
@@ -94,12 +88,14 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        GameManager.getInstance().saveData();
     }
 
     @Override
     public void resume() {
-
+        hud.logic=new Logic(GameManager.getInstance().gameData.getHunger(),GameManager.getInstance().gameData.getExpunge(),
+                GameManager.getInstance().gameData.getThist(), GameManager.getInstance().gameData.getSleep(),
+                GameManager.getInstance().gameData.getHappines(),GameManager.getInstance().gameData.getAge(),GameManager.getInstance().gameData.getDate());
     }
 
     @Override
@@ -109,6 +105,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        GameManager.getInstance().saveData();
         backgroundTexture.dispose();
         backgroundMusic.dispose();
         stage.dispose();
