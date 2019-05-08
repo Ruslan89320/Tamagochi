@@ -125,9 +125,12 @@ public class Hud extends Group implements Disposable {
         stage.act();
     }
 
+    public Logic getLogic(){
+        return logic;
+    }
     public void printNeeds(){
         a++;
-        if(a==1000) {
+        if(a==10000) {
             logic.Cycle();
             a = 0;
         }

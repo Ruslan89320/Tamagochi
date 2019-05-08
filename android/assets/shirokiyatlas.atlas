@@ -1,0 +1,75 @@
+shirokiyatlas.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+001
+  rotate: false
+  xy: 716, 224
+  size: 220, 220
+  orig: 220, 220
+  offset: 0, 0
+  index: -1
+002
+  rotate: false
+  xy: 626, 2
+  size: 250, 220
+  orig: 250, 220
+  offset: 0, 0
+  index: -1
+003
+  rotate: false
+  xy: 344, 2
+  size: 280, 220
+  orig: 280, 220
+  offset: 0, 0
+  index: -1
+004
+  rotate: false
+  xy: 404, 224
+  size: 310, 220
+  orig: 310, 220
+  offset: 0, 0
+  index: -1
+005
+  rotate: false
+  xy: 2, 2
+  size: 340, 220
+  orig: 340, 220
+  offset: 0, 0
+  index: -1
+006
+  rotate: false
+  xy: 464, 446
+  size: 370, 220
+  orig: 370, 220
+  offset: 0, 0
+  index: -1
+007
+  rotate: false
+  xy: 2, 224
+  size: 400, 220
+  orig: 400, 220
+  offset: 0, 0
+  index: -1
+008
+  rotate: false
+  xy: 494, 668
+  size: 430, 220
+  orig: 430, 220
+  offset: 0, 0
+  index: -1
+009
+  rotate: false
+  xy: 2, 446
+  size: 460, 220
+  orig: 460, 220
+  offset: 0, 0
+  index: -1
+010
+  rotate: false
+  xy: 2, 668
+  size: 490, 220
+  orig: 490, 220
+  offset: 0, 0
+  index: -1

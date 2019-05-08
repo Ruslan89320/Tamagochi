@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
 
 
-        backgroundTexture = new Texture(Gdx.files.internal("BackgroundHouse.jpg"));
+        backgroundTexture = new Texture(Gdx.files.internal("BackgroundHouse1.png"));
         Image background = new Image(backgroundTexture);
         background.setPosition(0,0);
         background.setSize(Constants.WIDTH,Constants.HEIGHT);
@@ -80,6 +80,7 @@ public class GameScreen implements Screen {
         stage.draw();
 
         hud.draw(batch,1);
+        if((hud.getLogic().getHappiness() + TamagochiActor.getHappy()) <= 100) hud.getLogic().setHappiness(hud.getLogic().getHappiness() + TamagochiActor.getHappy());
     }
 
     @Override

@@ -18,14 +18,24 @@ public class Logic {
     private int Happiness;
 
     public Logic(int hunger, int expunge,int thrist, int sleep, int happiness,int age, int time){
-        int n=((int)System.currentTimeMillis()-time)/10000;
+        int n=(int)(System.currentTimeMillis()-time)/(3600000*20);
         setHunger(hunger-n);
         setExpunge(expunge-n);
         setThrist(thrist-n);
         setSleep(sleep-n);
         setHappiness(happiness);
-        if(getExpunge()<HUNGER_NEEDSTOEAT) { setHappiness(happiness - 3 * (HUNGER_NEEDSTOEAT-getExpunge())); }
-        setAge(age+time);
+        if(getHunger() < 0) setHunger(0);
+        if(getExpunge() < 0) setExpunge(0);
+        if(getThrist() < 0) setThrist(0);
+        if(getSleep() < 0) setSleep(0);
+        if(getHunger() > 100) setHunger(100);
+        if(getExpunge() > 100) setExpunge(100);
+        if(getThrist() > 100) setThrist(100);
+        if(getSleep() > 100) setSleep(100);
+        if(getHappiness() > 100) setHappiness(100);
+        if(getExpunge()<HUNGER_NEEDSTOEAT) { setHappiness(happiness - 3 * (HUNGER_NEEDSTOEAT-getExpunge()));
+        if(getHappiness() < 0) setHappiness(0); }
+        setAge(age+n);
     }
 
     public void Cycle() {
