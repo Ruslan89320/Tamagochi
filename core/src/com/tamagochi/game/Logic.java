@@ -18,7 +18,7 @@ public class Logic {
     private int Happiness;
 
     public Logic(int hunger, int expunge,int thrist, int sleep, int happiness,int age, int time){
-        int n=(int)(System.currentTimeMillis()-time)/(3600000*20);
+        int n=(int)(System.currentTimeMillis()-time)/(360000*20);
         setHunger(hunger-n);
         setExpunge(expunge-n);
         setThrist(thrist-n);

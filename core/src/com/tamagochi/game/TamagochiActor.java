@@ -66,7 +66,10 @@ public class TamagochiActor extends Actor {
                 time2 = System.currentTimeMillis() - time1;
                 if(time2 > 150)
                 {
-                    if (canAnim) anim = 3;
+                    Gdx.input.vibrate(10);
+                    if (canAnim) {
+                        anim = 3;
+                    }
                     else anim = 0;
                     if (canSound) {
                         mrrSound.loop();

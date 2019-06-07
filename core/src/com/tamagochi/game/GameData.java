@@ -1,9 +1,8 @@
 package com.tamagochi.game;
 
-import java.util.Date;
-
 public class GameData {
     private int Hunger,Thrist,Expunge, Sleep, Happines, Age ,Date;
+    private float musicVolume;
 
     public void setAll(Logic logic){
         setHunger(logic.getHunger());
@@ -13,6 +12,10 @@ public class GameData {
         setThist(logic.getThrist());
         setAge(logic.getAge());
     }
+
+    public float getmusicVolume(){return musicVolume;}
+    public void setmusicVolume(float musicvolume){this.musicVolume = musicvolume;}
+
     public int getDate(){return Date;}
     public void setDate(int date){this.Date = date;}
 

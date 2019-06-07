@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
         this.game = TamagochiGame;
 
         batch = new SpriteBatch();
-        hud= new Hud(batch);
+        hud= new Hud(batch,game,this);
 
         stage = new Stage(new ScreenViewport());
 
@@ -56,7 +56,7 @@ public class GameScreen implements Screen {
 
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BackgroundMusic.mp3"));
         backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(0.2f);
+        backgroundMusic.setVolume(GameManager.getInstance().gameData.getmusicVolume());
         backgroundMusic.play();
     }
 
@@ -80,7 +80,7 @@ public class GameScreen implements Screen {
         stage.draw();
 
         hud.draw(batch,1);
-        if((hud.getLogic().getHappiness() + TamagochiActor.getHappy()) <= 100) hud.getLogic().setHappiness(hud.getLogic().getHappiness() + TamagochiActor.getHappy());
+        if((hud.getLogic().getHappiness() + TamagochiActor.getHappy()) <= 80) hud.getLogic().setHappiness(hud.getLogic().getHappiness() + TamagochiActor.getHappy());
     }
 
     @Override

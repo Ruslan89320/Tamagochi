@@ -1,5 +1,6 @@
 package com.tamagochi.game.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tamagochi.game.GameManager;
 import com.tamagochi.game.Logic;
+import com.tamagochi.game.TamagochiGame;
 import com.tamagochi.game.utils.Constants;
 
 public class Hud extends Group implements Disposable {
@@ -29,13 +31,18 @@ public class Hud extends Group implements Disposable {
     public Logic logic;
     int a=0;
 
-    private Label hungercountLabel, happinesscountLabel, sleepcountLabel, thristcountLabel, expungecountLabel;
-    Texture hungerbuttonTexture,happinessbuttonTexture,sleepbuttonTexture, thristbuttonTexture,expungebuttonTexture;
-    TextureRegion hungerbuttonTextureRegion, happinessbuttonTextureRegion, thristbuttonTextureRegion,expungebuttonTextureRegion, sleepbuttonTextureRegion;
-    TextureRegionDrawable hungerbuttonTextureRegionDrawable,  happinessbuttonTextureRegionDrawable, thristbuttonTextureRegionDrawable,expungebuttonTextureRegionDrawable,sleepbuttonTextureRegionDrawable;
-    ImageButton HungerButton, HappinessButton,ThristButton, ExpungeButton,SleepButton;
 
-    public Hud(SpriteBatch sb){
+    private Label hungercountLabel, happinesscountLabel, sleepcountLabel, thristcountLabel, expungecountLabel;
+    Texture hungerbuttonTexture,happinessbuttonTexture,sleepbuttonTexture, thristbuttonTexture,
+            expungebuttonTexture, settingsbuttonTexture;
+    TextureRegion hungerbuttonTextureRegion, happinessbuttonTextureRegion, thristbuttonTextureRegion,
+            expungebuttonTextureRegion, sleepbuttonTextureRegion,settingsbuttonTextureRegion;
+    TextureRegionDrawable hungerbuttonTextureRegionDrawable,  happinessbuttonTextureRegionDrawable,
+            thristbuttonTextureRegionDrawable,expungebuttonTextureRegionDrawable,sleepbuttonTextureRegionDrawable,
+            settingsbuttonTextureRegionDrawable;
+    ImageButton HungerButton, HappinessButton,ThristButton, ExpungeButton,SleepButton,SettingsButton;
+
+    public Hud(SpriteBatch sb, final Game game,final GameScreen gameScreen){
         viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
         logic = new Logic(GameManager.getInstance().gameData.getHunger(),GameManager.getInstance().gameData.getExpunge(),
@@ -94,6 +101,20 @@ public class Hud extends Group implements Disposable {
         happinessbuttonTextureRegionDrawable = new TextureRegionDrawable(happinessbuttonTextureRegion);
         HappinessButton = new ImageButton(happinessbuttonTextureRegionDrawable);
 
+        settingsbuttonTexture = new Texture(Gdx.files.internal("Buttons/SettingsButton.png"));
+        settingsbuttonTextureRegion = new TextureRegion(settingsbuttonTexture);
+        settingsbuttonTextureRegionDrawable = new TextureRegionDrawable(settingsbuttonTextureRegion);
+        SettingsButton = new ImageButton(settingsbuttonTextureRegionDrawable);
+
+        SettingsButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                //TODO
+                game.setScreen(new Settings(game,gameScreen));
+
+            }
+        });
+
+
         Table table = new Table();
         table.top();
         table.setFillParent(true);
@@ -109,6 +130,8 @@ public class Hud extends Group implements Disposable {
         table.add(thristcountLabel).expandX();
         table.add(hungercountLabel).expandX();
         table.add(expungecountLabel).expandX();
+        table.row();
+        table.add(SettingsButton).expand().left().bottom();
 
         stage.addActor(table);
     }
@@ -123,6 +146,7 @@ public class Hud extends Group implements Disposable {
         super.act(delta);
         printNeeds();
         stage.act();
+        stage.draw();
     }
 
     public Logic getLogic(){
@@ -145,5 +169,10 @@ public class Hud extends Group implements Disposable {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         stage.draw();
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
     }
 }
