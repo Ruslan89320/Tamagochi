@@ -1,10 +1,8 @@
 package com.tamagochi.game.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,26 +13,26 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tamagochi.game.GameManager;
 import com.tamagochi.game.Logic;
 import com.tamagochi.game.TamagochiActor;
+import com.tamagochi.game.TamagochiGame;
 import com.tamagochi.game.utils.Constants;
 
 
 public class GameScreen implements Screen {
-    private final Game game;
+    private final TamagochiGame game;
     private SpriteBatch batch;
     private Stage stage;
     private Texture backgroundTexture;
-    Music backgroundMusic;
     TamagochiActor TamagochiActor;
     private Hud hud;
     private OrthographicCamera camera;
     private InputMultiplexer multiplexer;
 
 
-    public GameScreen(Game TamagochiGame){
+    public GameScreen(TamagochiGame TamagochiGame){
         this.game = TamagochiGame;
 
         batch = new SpriteBatch();
-        hud= new Hud(batch,game,this);
+        hud= new Hud(batch,game);
 
         stage = new Stage(new ScreenViewport());
 
@@ -50,14 +48,9 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false,Constants.WIDTH,Constants.HEIGHT);
 
 
-        TamagochiActor = new TamagochiActor();
+        TamagochiActor = new TamagochiActor(hud);
         stage.addActor(TamagochiActor);
 
-
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BackgroundMusic.mp3"));
-        backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(GameManager.getInstance().gameData.getmusicVolume());
-        backgroundMusic.play();
     }
 
     public void show() {
@@ -108,7 +101,6 @@ public class GameScreen implements Screen {
     public void dispose() {
         GameManager.getInstance().saveData();
         backgroundTexture.dispose();
-        backgroundMusic.dispose();
         stage.dispose();
     }
 }

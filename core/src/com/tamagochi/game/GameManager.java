@@ -15,7 +15,6 @@ public class GameManager {
 
     public void initializeGameData() {
         if (!fileHandle.exists()) {
-            System.out.print("cool");
             gameData = new GameData();
 
             gameData.setDate((int)System.currentTimeMillis());
@@ -25,11 +24,25 @@ public class GameManager {
             gameData.setHappines(100);
             gameData.setHunger(100);
             gameData.setAge(0);
-
+            gameData.setCatType(1);
+            gameData.setmusicVolume(0.5f);
             saveData();
         } else {
             loadData();
         }
+    }
+
+    public void startNewGame(){
+        gameData.setDate((int)System.currentTimeMillis());
+        gameData.setThist(100);
+        gameData.setExpunge(100);
+        gameData.setSleep(100);
+        gameData.setHappines(100);
+        gameData.setHunger(100);
+        gameData.setAge(0);
+        gameData.setCatType(1);
+        gameData.setmusicVolume(0.5f);
+        saveData();
     }
 
     public void saveData() {

@@ -57,7 +57,7 @@ public class Logic {
     }
 
     public boolean isDead(){
-        if((getHunger()==0) || (getThrist()==0) || (getHappiness()==0) || (Age==AGE_DEATHFROMNATURALCAUSES)) return true;
+        if((getHunger()==0) || (getThrist()==0) || (getExpunge()==0) || (Age==AGE_DEATHFROMNATURALCAUSES)) return true;
         else return false;
     }
 

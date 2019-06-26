@@ -1,8 +1,12 @@
 package com.tamagochi.game;
 
+
 public class GameData {
-    private int Hunger,Thrist,Expunge, Sleep, Happines, Age ,Date;
-    private float musicVolume;
+    private int Hunger,Thrist,Expunge, Sleep, Happines, Age ,Date,CatType;
+    private float musicVolume,soundVolume;
+
+    //ACHIEVEMENTS
+    boolean YaNeGolodniy,Shirokiy;
 
     public void setAll(Logic logic){
         setHunger(logic.getHunger());
@@ -12,9 +16,27 @@ public class GameData {
         setThist(logic.getThrist());
         setAge(logic.getAge());
     }
+//    public float getsoundVolume(){return soundVolume;}
+//    public void setsoundolume(float soundvolume){this.soundVolume = soundvolume;}
+
+    //ACHIEVEMENTS
+    public boolean getAchievGolodniy(){return YaNeGolodniy;}
+    public void setAchievGolodniy(boolean n){this.YaNeGolodniy = n;}
+
+    public boolean getAchievShirokiy(){return Shirokiy;}
+    public void setAchievShirokiy(boolean n){this.Shirokiy = n;}
+
+
+
+
+
+    public int getCatType(){return CatType;}
+    public void setCatType(int cattype){this.CatType= cattype;}
+
 
     public float getmusicVolume(){return musicVolume;}
     public void setmusicVolume(float musicvolume){this.musicVolume = musicvolume;}
+
 
     public int getDate(){return Date;}
     public void setDate(int date){this.Date = date;}

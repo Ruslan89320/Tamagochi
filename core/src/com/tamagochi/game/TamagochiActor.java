@@ -14,9 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.tamagochi.game.screens.Hud;
 import com.tamagochi.game.utils.Constants;
 
 public class TamagochiActor extends Actor {
+    Hud hud;
     Sprite tamagochiSprite;
     Music mewSound;
     Music shirokiySound;
@@ -35,7 +37,8 @@ public class TamagochiActor extends Actor {
     boolean canClicked = true;
     int happy = 0;
 
-    public TamagochiActor() {
+    public TamagochiActor(Hud Hud) {
+        hud = Hud;
         clickAtlas = new TextureAtlas(Gdx.files.internal("clickatlas.atlas"));
         clickAtlas2 = new TextureAtlas(Gdx.files.internal("clickatlas2.atlas"));
         clickAnimation = new Animation(0.2f, clickAtlas.getRegions());
@@ -44,7 +47,7 @@ public class TamagochiActor extends Actor {
         shirAnimation = new Animation(0.06f, shirokiyAtlas.getRegions());
         mrrAtlas = new TextureAtlas(Gdx.files.internal("mrratlas.atlas"));
         mrrAnimation = new Animation(0.2f, mrrAtlas.getRegions());
-        tamagochiSprite = new Sprite(new Texture(Gdx.files.internal("TamagochiCat.png")));
+        tamagochiSprite = new Sprite(new Texture(Gdx.files.internal("TamagochiCat1.png")));
         shirokiySound = Gdx.audio.newMusic(Gdx.files.internal("shirokiy.wav"));
         mewSound = Gdx.audio.newMusic(Gdx.files.internal("mew.wav"));
         mrrSound = Gdx.audio.newSound(Gdx.files.internal("mrr.wav"));
@@ -66,9 +69,10 @@ public class TamagochiActor extends Actor {
                 time2 = System.currentTimeMillis() - time1;
                 if(time2 > 150)
                 {
-                    Gdx.input.vibrate(10);
+
                     if (canAnim) {
                         anim = 3;
+                        Gdx.input.vibrate(10);
                     }
                     else anim = 0;
                     if (canSound) {
@@ -112,6 +116,7 @@ public class TamagochiActor extends Actor {
                     if (anim == 0) {
                         if (rand == 491) //ШИРОКИЙ
                         {
+                            GameManager.getInstance().gameData.setAchievShirokiy(true);
                             if(!shirokiySound.isPlaying()) shirokiySound.play();
                             anim = 2;
                         } else //прыг
@@ -135,56 +140,49 @@ public class TamagochiActor extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        if(anim == 1)
-        {
-            stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw((TextureRegion) clickAnimation.getKeyFrame(stateTime, false), Constants.WIDTH/2 - tamagochiSprite.getWidth()/2 + 10, 100);
-
-            if(stateTime >= clickAnimation.getAnimationDuration())
-            {
-                anim = 0;
-            }
-        }
-        else if(anim == 2)
-        {
-            stateTime += Gdx.graphics.getDeltaTime();
-            TextureRegion reg = (TextureRegion)shirAnimation.getKeyFrame(stateTime, false);
-            batch.draw(reg, Constants.WIDTH/2 - reg.getRegionWidth()/2 + 10 , 100);
-
-            if(stateTime >= shirAnimation.getAnimationDuration())
-            {
-                anim = 0;
-            }
-        }
-        else if(anim == 3)
-        {
-            happy = 0;
-            stateTime += Gdx.graphics.getDeltaTime();
-            happyTime += Gdx.graphics.getDeltaTime();
-            batch.draw((TextureRegion) mrrAnimation.getKeyFrame(stateTime, true), Constants.WIDTH/2 - tamagochiSprite.getWidth()/2 + 10, 100);
-            if(happyTime >= 1.5)
-            {
-                happy = 1;
-                happyTime = 0;
-            }
-
-        }
-        else if(anim == 4)
-        {
-            stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw((TextureRegion) clickAnimation2.getKeyFrame(stateTime, true), Constants.WIDTH/2 - tamagochiSprite.getWidth()/2 + 10, 100);
-
-            if(stateTime >= clickAnimation2.getAnimationDuration()*2)
-            {
-                anim = 0;
-            }
-        }
-        else
-        {
-            stateTime = 0;
+        if(hud.logic.isDead()){
+            tamagochiSprite = new Sprite(new Texture(Gdx.files.internal("DeadCat.png")));
+            tamagochiSprite.setPosition( Constants.WIDTH/2-tamagochiSprite.getWidth()/2 + 10,100);
             tamagochiSprite.draw(batch);
         }
+        else {
+            if (anim == 1) {
+                stateTime += Gdx.graphics.getDeltaTime();
+                batch.draw((TextureRegion) clickAnimation.getKeyFrame(stateTime, false), Constants.WIDTH / 2 - tamagochiSprite.getWidth() / 2 + 10, 100);
 
+                if (stateTime >= clickAnimation.getAnimationDuration()) {
+                    anim = 0;
+                }
+            } else if (anim == 2) {
+                stateTime += Gdx.graphics.getDeltaTime();
+                TextureRegion reg = (TextureRegion) shirAnimation.getKeyFrame(stateTime, false);
+                batch.draw(reg, Constants.WIDTH / 2 - reg.getRegionWidth() / 2 + 10, 100);
+
+                if (stateTime >= shirAnimation.getAnimationDuration()) {
+                    anim = 0;
+                }
+            } else if (anim == 3) {
+                happy = 0;
+                stateTime += Gdx.graphics.getDeltaTime();
+                happyTime += Gdx.graphics.getDeltaTime();
+                batch.draw((TextureRegion) mrrAnimation.getKeyFrame(stateTime, true), Constants.WIDTH / 2 - tamagochiSprite.getWidth() / 2 + 10, 100);
+                if (happyTime >= 1.5) {
+                    happy = 1;
+                    happyTime = 0;
+                }
+
+            } else if (anim == 4) {
+                stateTime += Gdx.graphics.getDeltaTime();
+                batch.draw((TextureRegion) clickAnimation2.getKeyFrame(stateTime, true), Constants.WIDTH / 2 - tamagochiSprite.getWidth() / 2 + 10, 100);
+
+                if (stateTime >= clickAnimation2.getAnimationDuration() * 2) {
+                    anim = 0;
+                }
+            } else {
+                stateTime = 0;
+                tamagochiSprite.draw(batch);
+            }
+        }
     }
 
     @Override

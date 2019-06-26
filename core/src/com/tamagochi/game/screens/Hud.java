@@ -1,7 +1,7 @@
 package com.tamagochi.game.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,12 +9,18 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
@@ -29,20 +35,17 @@ public class Hud extends Group implements Disposable {
     public Stage stage;
     private Viewport viewport;
     public Logic logic;
-    int a=0;
+    int a=0,b=0;
+    Table table;
+    Image TableImage;
+    Skin skin;
+    Button  NewGameButton;
 
+    private Label hungercountLabel, happinesscountLabel, sleepcountLabel, thristcountLabel, expungecountLabel,deathLabel;
+    Texture TableTexture;
+    ImageButton HungerButton, HappinessButton,ThristButton, ExpungeButton,SleepButton,SettingsButton, AchievButton;
 
-    private Label hungercountLabel, happinesscountLabel, sleepcountLabel, thristcountLabel, expungecountLabel;
-    Texture hungerbuttonTexture,happinessbuttonTexture,sleepbuttonTexture, thristbuttonTexture,
-            expungebuttonTexture, settingsbuttonTexture;
-    TextureRegion hungerbuttonTextureRegion, happinessbuttonTextureRegion, thristbuttonTextureRegion,
-            expungebuttonTextureRegion, sleepbuttonTextureRegion,settingsbuttonTextureRegion;
-    TextureRegionDrawable hungerbuttonTextureRegionDrawable,  happinessbuttonTextureRegionDrawable,
-            thristbuttonTextureRegionDrawable,expungebuttonTextureRegionDrawable,sleepbuttonTextureRegionDrawable,
-            settingsbuttonTextureRegionDrawable;
-    ImageButton HungerButton, HappinessButton,ThristButton, ExpungeButton,SleepButton,SettingsButton;
-
-    public Hud(SpriteBatch sb, final Game game,final GameScreen gameScreen){
+    public Hud(SpriteBatch sb, final TamagochiGame game){
         viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
         logic = new Logic(GameManager.getInstance().gameData.getHunger(),GameManager.getInstance().gameData.getExpunge(),
@@ -52,73 +55,102 @@ public class Hud extends Group implements Disposable {
 
 
         hungercountLabel = new Label(String.format("%03d", logic.getHunger()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        hungerbuttonTexture = new Texture(Gdx.files.internal("Buttons/HungerButton.png"));
-        hungerbuttonTextureRegion = new TextureRegion(hungerbuttonTexture);
-        hungerbuttonTextureRegionDrawable = new TextureRegionDrawable(hungerbuttonTextureRegion);
-        HungerButton = new ImageButton(hungerbuttonTextureRegionDrawable);
+
+        HungerButton = makeImageButton("Buttons/HungerButton.png");
         HungerButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                if(logic.getHunger()==100 && GameManager.getInstance().gameData.getAchievGolodniy() == false){
+                    GameManager.getInstance().gameData.setAchievGolodniy(true);
+                    Music YaNeGolodniy = Gdx.audio.newMusic(Gdx.files.internal("YaNeGolodniy.mp3"));
+                    YaNeGolodniy.play();
+                }
                 logic.doEat(40);
             }
         });
 
+
+
         thristcountLabel = new Label(String.format("%03d", logic.getThrist()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        thristbuttonTexture = new Texture(Gdx.files.internal("Buttons/ThristButton.png"));
-        thristbuttonTextureRegion = new TextureRegion(thristbuttonTexture);
-        thristbuttonTextureRegionDrawable = new TextureRegionDrawable(thristbuttonTextureRegion);
-        ThristButton = new ImageButton(thristbuttonTextureRegionDrawable);
+
+        ThristButton = makeImageButton("Buttons/ThristButton.png");
         ThristButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 logic.doDrink(40);
             }
         });
 
+
+
         expungecountLabel = new Label(String.format("%03d", logic.getThrist()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        expungebuttonTexture = new Texture(Gdx.files.internal("Buttons/ExpungeButton.png"));
-        expungebuttonTextureRegion = new TextureRegion(expungebuttonTexture);
-        expungebuttonTextureRegionDrawable = new TextureRegionDrawable(expungebuttonTextureRegion);
-        ExpungeButton = new ImageButton(expungebuttonTextureRegionDrawable);
+
+        ExpungeButton = makeImageButton("Buttons/ExpungeButton.png");
         ExpungeButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 logic.doWaste();
             }
         });
 
+
+
+
         sleepcountLabel = new Label(String.format("%03d", logic.getThrist()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        sleepbuttonTexture = new Texture(Gdx.files.internal("Buttons/SleepButton.png"));
-        sleepbuttonTextureRegion = new TextureRegion(sleepbuttonTexture);
-        sleepbuttonTextureRegionDrawable = new TextureRegionDrawable(sleepbuttonTextureRegion);
-        SleepButton = new ImageButton(sleepbuttonTextureRegionDrawable);
+
+        SleepButton = makeImageButton("Buttons/SleepButton.png");
         SleepButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 logic.doSleep(80);
             }
         });
 
+
+
         happinesscountLabel = new Label(String.format("%03d", logic.getHappiness()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        happinessbuttonTexture = new Texture(Gdx.files.internal("Buttons/HappinessButton.png"));
-        happinessbuttonTextureRegion = new TextureRegion(happinessbuttonTexture);
-        happinessbuttonTextureRegionDrawable = new TextureRegionDrawable(happinessbuttonTextureRegion);
-        HappinessButton = new ImageButton(happinessbuttonTextureRegionDrawable);
+        HappinessButton = makeImageButton("Buttons/HappinessButton.png");
 
-        settingsbuttonTexture = new Texture(Gdx.files.internal("Buttons/SettingsButton.png"));
-        settingsbuttonTextureRegion = new TextureRegion(settingsbuttonTexture);
-        settingsbuttonTextureRegionDrawable = new TextureRegionDrawable(settingsbuttonTextureRegion);
-        SettingsButton = new ImageButton(settingsbuttonTextureRegionDrawable);
 
+
+        SettingsButton = makeImageButton("Buttons/SettingsButton.png");
+        SettingsButton.setSize(30,30);
         SettingsButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                //TODO
-                game.setScreen(new Settings(game,gameScreen));
+                game.setScreen(new Settings(game));
 
             }
         });
 
 
-        Table table = new Table();
+
+        AchievButton = makeImageButton("Buttons/AchievButton.png");
+        AchievButton.setSize(30,30);
+        AchievButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new Achievement(game));
+            }
+        });
+
+
+        TableTexture = new Texture(Gdx.files.internal("DeathTable.png"));
+        TableImage = new Image(TableTexture);
+        TableImage.setPosition(Constants.WIDTH/2-TableImage.getWidth()/2,Constants.HEIGHT/2-TableImage.getHeight()/2);
+        TableImage.setVisible(false);
+        deathLabel = new Label("Dead", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        deathLabel.setVisible(false);
+
+        skin = new Skin(Gdx.files.internal("MenuSkin/uiskin.json"));
+        NewGameButton = new TextButton("Start new game",skin);
+        NewGameButton.setSize(Constants.WIDTH/2,Constants.HEIGHT/6);
+        NewGameButton.setPosition(Constants.WIDTH/2-NewGameButton.getWidth()/2,2*Constants.WIDTH/7 - NewGameButton.getHeight()/2);
+        NewGameButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                GameManager.getInstance().startNewGame();
+                game.setScreen(new GameScreen(game));
+            }
+        });
+        NewGameButton.setVisible(false);
+
+        table = new Table();
         table.top();
         table.setFillParent(true);
-
         table.add(HappinessButton).expandX().padTop(10);
         table.add(SleepButton).expandX().padTop(10);
         table.add(ThristButton).expandX().padTop(10);
@@ -132,8 +164,40 @@ public class Hud extends Group implements Disposable {
         table.add(expungecountLabel).expandX();
         table.row();
         table.add(SettingsButton).expand().left().bottom();
+        table.add();
+        table.add();
+        table.add();
+        table.add(AchievButton).right().bottom();
+
 
         stage.addActor(table);
+        stage.addActor(TableImage);
+        stage.addActor(deathLabel);
+        stage.addActor(NewGameButton);
+    }
+
+    public ImageButton makeImageButton(String file){
+        Texture buttonTexture = new Texture(Gdx.files.internal(file));
+        TextureRegion buttonTextureRegion = new TextureRegion( buttonTexture);
+        TextureRegionDrawable buttonTextureRegionDrawable = new TextureRegionDrawable( buttonTextureRegion);
+        ImageButton button = new ImageButton(buttonTextureRegionDrawable);
+        return button;
+    }
+
+    public void DeathLabel(){
+        if(logic.getHunger()==0){
+            deathLabel.setText("Your pet has died from Hunger");
+        }
+        if(logic.getThrist()==0){
+            deathLabel.setText("Your pet has died from Thrist");
+        }
+        if(logic.getExpunge()==0){
+            deathLabel.setText("Your pet has died from Disease");
+        }
+        if(logic.getAge()==819200){
+            deathLabel.setText("Your pet has died of old age");
+        }
+        deathLabel.setPosition(300,2*Constants.HEIGHT/3-deathLabel.getHeight()/2);
     }
 
     public void dispose() {
@@ -147,6 +211,16 @@ public class Hud extends Group implements Disposable {
         printNeeds();
         stage.act();
         stage.draw();
+        if(logic.isDead()){
+            b++;
+            if(b>100) {
+                table.setVisible(false);
+                deathLabel.setVisible(true);
+                TableImage.setVisible(true);
+                NewGameButton.setVisible(true);
+                DeathLabel();
+            }
+        }
     }
 
     public Logic getLogic(){

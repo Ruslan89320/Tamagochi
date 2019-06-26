@@ -1,6 +1,5 @@
 package com.tamagochi.game.screens;
 
-        import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.Screen;
         import com.badlogic.gdx.graphics.Color;
@@ -11,10 +10,11 @@ package com.tamagochi.game.screens;
         import com.badlogic.gdx.scenes.scene2d.Stage;
         import com.badlogic.gdx.scenes.scene2d.ui.Image;
         import com.badlogic.gdx.scenes.scene2d.ui.Label;
+        import com.tamagochi.game.TamagochiGame;
         import com.tamagochi.game.utils.Constants;
 
 public class LoadingScreen implements Screen {
-    private Game game;
+    private TamagochiGame game;
     int i =0;
     Stage stage;
     Texture catTexture;
@@ -22,7 +22,7 @@ public class LoadingScreen implements Screen {
     Label LoadingLabel;
     private OrthographicCamera camera;
 
-    public LoadingScreen(final Game game) {
+    public LoadingScreen(final TamagochiGame game) {
         this.game = game;
         stage = new Stage();
         camera = (OrthographicCamera) stage.getViewport().getCamera();
